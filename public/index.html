@@ -55,7 +55,6 @@
   </div>
 
   <script>
-    // Get or generate visitor ID (persisted)
     function getVisitorId() {
       let id = localStorage.getItem('visitorId');
       if (!id) {
@@ -64,6 +63,7 @@
       }
       return id;
     }
+
     function generateSessionId() {
       return crypto.randomUUID();
     }
@@ -89,7 +89,9 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
-          keepalive: true,
+          keepalive: true
+        }).catch(err => {
+          console.error('Failed to send event:', err);
         });
       }
     }
@@ -97,7 +99,7 @@
     document.getElementById('startSessionBtn').addEventListener('click', () => {
       sessionId = generateSessionId();
       sendEvent('session_start');
-      
+
       heartbeatInterval = setInterval(() => {
         sendEvent('heartbeat');
       }, 15000);
